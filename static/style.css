@@ -1,0 +1,44 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?rxt0zr');
+  src:  url('fonts/icomoon.eot?rxt0zr#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?rxt0zr') format('truetype'),
+    url('fonts/icomoon.woff?rxt0zr') format('woff'),
+    url('fonts/icomoon.svg?rxt0zr#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-twilio-icon:before {
+  content: "\e900";
+  color: #e31e26;
+}
+
+.text-dark {
+  color: #343a40!important;
+}
+
+.footer {
+  background-color: #f5f5f5!important;
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+  text-align: right;
+  padding-right: 1.5rem;
+}

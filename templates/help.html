@@ -1,0 +1,45 @@
+<div class="accordion" id="accordion">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left text-dark text-body" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          How can I use this?
+        </button>
+      </h2>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+          Register for <a href="https://www.twilio.com/">Twilio</a> with a trial account, configuring a proxy phone number for SMS/Voice, and acquiring a sandbox phone number specifically for WhatsApp. Configure these with your SID and auth token in the config.yaml.
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left text-dark text-body collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Why am I having errors?
+        </button>
+      </h2>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+          Check your config credentials, as well as any potential rate limiting. Errors are logged, due note that WhatsApp, unless your account is promoted to business from sandbox, you must manually get those you text to sign up for texts from your number, or give them a link in the format whatsapp://send?phone=[Your Sandbox Number]&text=[your URL-encoded sandbox keyword].
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h2 class="mb-0">
+        <button class="btn btn-link btn-block text-left text-dark text-body collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Can I contribute to this?
+        </button>
+      </h2>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+      <div class="card-body">
+          Absolutely! Feel free to PR improvements, new services, and other aspects of Twilio to help new users demo!
+      </div>
+    </div>
+  </div>
+</div>

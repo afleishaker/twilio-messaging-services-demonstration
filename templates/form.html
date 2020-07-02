@@ -1,0 +1,24 @@
+<form method="post" enctype=multipart/form-data>
+    <input name="contactMethod" id="form-header" class="d-none" value="SMS">
+    <div class="form-group">
+        <label for="phoneInput">Phone number</label>
+        <input type="tel" class="form-control" name="phone_number" id="phoneInput" aria-describedby="phoneHelp" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="Enter phone number" required>
+        <small id="phoneHelp" class="form-text text-muted">This must be a valid phone number in the format 123-456-7890.</small>
+    </div>
+    <div class="form-group">
+        <label for="bodyInput">Body</label>
+        <textarea class="form-control" name="body" id="bodyInput" rows="3" aria-describedby="bodyHelp" placeholder="Enter your message body" required></textarea>
+        <small id="bodyHelp" class="form-text text-muted">Subject to contact method input limitations.</small>
+    </div>
+    <div class="form-group" id="image-form-group">
+        <label for="imageInput">Image URL</label>
+        <input type="url" class="form-control" name="image" id="imageInput" aria-describedby="imageHelp" placeholder="Enter image URL">
+        <small id="imageHelp" class="form-text text-muted">This must be a valid image URL in http://foo.bar format.</small>
+    </div>
+    <div class="form-group d-none" id="audio-form-group">
+        <label for="audioInput">Audio URL</label>
+        <input type="url" class="form-control" name="audio" id="audioInput" aria-describedby="audioHelp" placeholder="Enter audio URL">
+        <small id="audioHelp" class="form-text text-muted">This must be a valid audio URL in http://foo.bar format.</small>
+    </div>
+    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane pr-2"></i>Send</button>
+</form>

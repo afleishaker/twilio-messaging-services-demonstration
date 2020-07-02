@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Metadata -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="http://icons.duckduckgo.com/ip2/www.twilio.com.ico">
+    <title>Twilio Messaging Services Demonstration</title>
+
+    <!-- CSS assets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/style.css">
+
+    <!-- JS assets -->
+    <script src="https://kit.fontawesome.com/bd41ab6d6e.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- Nav -->
+    {% include "nav.html" %}
+
+    <main role="main" class="pt-3">
+        <!-- Flash messages -->
+        {% include "flashes.html" %}
+
+        <!-- Form tabs -->
+        {% include "tabs.html" %}
+    </main>
+
+    <footer class="footer mt-auto ml-auto py-3" id="footer">
+        <span class="text-muted ml-auto"><i class="fas fa-code" aria-hidden="true"></i> with <i class="fas fa-heart" aria-hidden="true"></i> by Adam Fleishaker</span>
+    </footer>
+
+    <!-- Modal -->
+    {% include "modal.html" %}
+
+    <!-- Script for event and modal callbacks -->
+    <script>
+        function getDisplayTag(enabled){
+            return enabled ? "d-block" : "d-none"
+        }
+
+        function updateAttributes(element, enabled){
+            element.addClass(getDisplayTag(enabled))
+            element.removeClass(getDisplayTag(!enabled))
+        }
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            let contactMethod = $(e.target).children(0).eq(1).text()
+            image = $('#image-form-group')
+            audio = $('#audio-form-group')
+            switch(contactMethod) {
+            case "Voice":
+                updateAttributes(image, false)
+                updateAttributes(audio, true)
+                break;
+            default:
+                updateAttributes(image, true)
+                updateAttributes(audio, false)
+                break;
+            }
+            $('#form-header').val(contactMethod)
+        });
+
+        $('#modal').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            $("#modal-title").text('Help');
+            $("#modal-body").html(`{% include "help.html" %}`);
+        });
+    </script>
+</body>
+</html>
