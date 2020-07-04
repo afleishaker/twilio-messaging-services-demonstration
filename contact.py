@@ -1,28 +1,41 @@
-from enum import Enum
 from twilio.rest import Client
+from urllib.parse import urlparse, urlsplit, urlunsplit
 import yaml
 
-class ContactMethod(Enum):
-    SMS = "SMS"
-    VOICE = "Voice"
-    WHATSAPP = "WhatsApp"
 
-    def __init__(self, *args):
-        config = yaml.load(open("config.yaml"), Loader=yaml.FullLoader)
-        self.client = Client(config.get("account_sid"), config.get("auth_token"))
-        self.phone_number = config.get("phone_number")
-        self.whatsapp_phone_number = config.get("whatsapp_phone_number")
+class Contact(object):
 
-    def send_message(self, form):
+    def __init__(self, app, *args):
+        config = yaml.load(open('config.yaml'), Loader=yaml.FullLoader)
+        self.client = Client(config.get('account_sid'), config.get('auth_token'))
+        self.phone_number = config.get('phone_number')
+        self.whatsapp_phone_number = config.get('whatsapp_phone_number')
+        self.client.incoming_phone_numbers.list(phone_number=self.phone_number)[0].update(
+            sms_url=f"{app.config.get('BASE_URL')}/receive_text", voice_url=f"{app.config.get('BASE_URL')}/receive_call")
+        print("Initialized")
+
+    def parse_url(self, url):
+        split = list(urlsplit(url))
+        if split[0] is '':
+            split[0] = 'http'
+            split[1] = split[2]
+            split[2] = ''
+        return urlunsplit(split)
+
+    def send_message(self, form, contact_method):
         body = form.get('body', default='')
         image = form.get('image', default='')
         audio = form.get('audio', default='')
-        to = f"whatsapp:{form.get('phone_number')}" if self.value == 'WhatsApp' else form.get('phone_number')
-        from_ = f"whatsapp:{self.whatsapp_phone_number}" if self.value == 'WhatsApp' else self.phone_number
+        if image != '':
+            image = self.parse_url(image)
+        if audio != '':
+            audio = self.parse_url(audio)
+        to = f"whatsapp:{form.get('phone_number')}" if contact_method.value == 'WhatsApp' else form.get('phone_number')
+        from_ = f"whatsapp:{self.whatsapp_phone_number}" if contact_method.value == 'WhatsApp' else self.phone_number
         response = None
         error = None
         try:
-            if self.value == 'Voice':
+            if contact_method.value == 'Voice':
                 if audio and not audio.isspace():
                     audio = f"<Play>{audio}</Play>"
                 response = self.client.calls.create(
@@ -46,7 +59,7 @@ class ContactMethod(Enum):
                                    to=to)
         except Exception as e:
             error = e
-        print("Contact Method: {}, To: {}, From: {}\nBody: {}, Image: {}, Audio: {}\nResponse: {}, Error: {}".format(self.value, to, from_,
+        print("Contact Method: {}, To: {}, From: {}\nBody: {}, Image: {}, Audio: {}\nResponse: {}, Error: {}".format(contact_method.value, to, from_,
                                                                                                                      body, image, audio,
                                                                                                                      response, error))
         return response, error

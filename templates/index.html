@@ -40,6 +40,10 @@
 
     <!-- Script for event and modal callbacks -->
     <script>
+
+        let new_notif = false
+        let notifBody = ''
+
         function getDisplayTag(enabled){
             return enabled ? "d-block" : "d-none"
         }
@@ -48,6 +52,52 @@
             element.addClass(getDisplayTag(enabled))
             element.removeClass(getDisplayTag(!enabled))
         }
+
+        function yieldNotificationHtml(notif){
+            notif_text = `<strong>New ${notif['ContactMethod']} from ${notif['From']}`
+            if(notif['ContactMethod'] == 'Voice'){
+                notif_text += `</strong>`
+            }
+            else{
+                notif_text += `:</strong> ${notif['Body']}`
+            }
+            notif_button = `<button type="button" class="btn btn-outline float-right"
+                             data-dismiss="modal" onclick="$('#phoneInput').val('${notif['From']}');
+                                                           $('#nav-${notif['ContactMethod'].toLowerCase()}-tab').tab('show');">
+                                <i class="fas fa-reply pr-2"></i>Reply
+                            </button>`
+            return `<p>
+                       ${notif_text}
+                       ${notif_button}
+                   </p>`
+        }
+
+        function pollReceivedMessage(contact){
+            $.getJSON('./responses/' + contact, function(body) {
+                notifHtml = ''
+                if(body){
+                    for(i=0; i<body.length; i++){
+                        if(Date.now() > body[i]['Timestamp']){
+                            notifHtml += yieldNotificationHtml(body[i])
+                        }
+                    }
+                    if (notifHtml != '') {
+                        new_notif = true
+                        notifBody = notifHtml
+                        if (($("#modal").data('bs.modal') || {})._isShown){
+                            $("#modal-body").html(`${$("#modal-body").html() + notifBody}`)
+                        }
+                        else{
+                            $('#modal').modal('show');
+                        }
+                    }
+                }
+                setTimeout(pollReceivedMessage, 200, contact)
+            });
+        }
+
+        pollReceivedMessage("{{phone_number}}")
+        pollReceivedMessage("{{whatsapp_phone_number}}")
 
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             let contactMethod = $(e.target).children(0).eq(1).text()
@@ -68,9 +118,19 @@
 
         $('#modal').on('show.bs.modal', function (event) {
             let button = $(event.relatedTarget);
-            $("#modal-title").text('Help');
-            $("#modal-body").html(`{% include "help.html" %}`);
+            if (new_notif){
+                $("#modal-label").text('New Message(s) Received')
+                console.log(notifBody)
+                $("#modal-body").html(notifBody)
+                new_notif = false
+                notifBody = ''
+            }
+            else {
+                $("#modal-label").text('Help')
+                $("#modal-body").html(`{% include "help.html" %}`)
+            }
         });
+
     </script>
 </body>
 </html>
